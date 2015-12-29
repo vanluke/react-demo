@@ -6,9 +6,10 @@ export default React.createClass({
     return (
       <div>
         <header>
-          <h1><Link to="/">React Starter kit</Link></h1>
+          <h1><Link to="/news">React Starter kit</Link></h1>
            <Link to="/news">News</Link>
-          <Link to="/about">About</Link>
+           <Link to="/vacation">Vacation</Link>
+           <Link to="/about">About</Link>
         </header>
         <section>
           {this.props.children || 'Welcome!'}
