@@ -12,6 +12,7 @@
   },
   "author": "Lukasz Gonciarz",
   "dependencies": {
+    "bootstrap": "^3.3.6",
     "flux": "^2.1.1",
     "fullcalendar": "^2.5.0",
     "history": "^1.13.1",

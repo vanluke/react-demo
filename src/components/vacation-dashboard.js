@@ -15,33 +15,26 @@ export class VacationDashboard extends React.Component {
 		}
 
 		componentDidMount () {
-			this.getVacations()
-			.then (v => {
-				this.setState({ vacations: v});
-				// this.forceUpdate();
-			}); 
 		}
 
 		getVacations () {
 			return this.vacationRepository
 					.getVacationList()
-					.then(v => v)
-					.catch(e => console.error(e));
+					.then(v => {
+						return v;
+					}).catch(e => console.error(e));
 		}
 
 		onView(e) {
-				console.log(e);
 		}
 
 		render () {
 			let sts = this.state.vacations;
-			console.log(sts);
 				return (
 		     		 <div>
 				        <Calendar
 				          id='xxx'
-				          events={sts}
-				          
+				          events={this.getVacations.bind(this)}
 				        />
 				      </div>
 				    )
