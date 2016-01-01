@@ -17,9 +17,9 @@ export class VacationDashboard extends React.Component {
 		componentDidMount () {
 		}
 
-		getVacations () {
+		getVacations (start, end, refresh) {
 			return this.vacationRepository
-					.getVacationList()
+					.getVacationList(start, end, refresh)
 					.then(v => {
 						return v;
 					}).catch(e => console.error(e));

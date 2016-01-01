@@ -1,71 +1,65 @@
-let ev = [
-  {
-    id: 1, 'title': 'All Day Event',
-    'allDay': true,
-    'start': new Date(2015, 3, 0),
-    'end': new Date(2015, 3, 0),
-    'description': 'asdasdsasd'
-  },
-  {
-    id: 2, 'title': 'Long Event',
-    'start': new Date(2015, 3, 7),
-    'end': new Date(2015, 3, 10),
-    'description': 'asdasdsasd'
-  },
-  {
-    id: 3, 'title': 'Some Event',
-    'start': new Date(2015, 3, 9, 0, 0, 0),
-    'end': new Date(2015, 3, 9, 0, 0, 0),
-     'description': 'asdasdsasd'
-  },
-  {
-    id: 4, 'title': 'Conference',
-    'start': new Date(2015, 3, 11),
-    'end': new Date(2015, 3, 13),
-    description: 'Big conference for important people'
-  },
-  {
-    id: 5, 'title': 'Meeting',
-    'start': new Date(2015, 3, 12, 10, 30, 0, 0),
-    'end': new Date(2015, 3, 12, 12, 30, 0, 0),
-    description: 'Pre-meeting meeting, to prepare for the meeting'
-  },
-  {
-    id: 6, 'title': 'Lunch',
-    'start':new Date(2015, 11, 12, 12, 0, 0, 0),
-    'end': new Date(2015, 11, 13, 13, 0, 0, 0),
-    description: 'Power lunch'
-  },
-  {
-    id: 7, 'title': 'Meeting',
-    'start':new Date(2015, 3, 12,14, 0, 0, 0),
-    'end': new Date(2015, 3, 12,15, 0, 0, 0),
-    'description': 'asdasdsasd'
-  },
-  {
-    id: 8, 'title': 'Happy Hour',
-    'start':new Date(2015, 3, 12, 17, 0, 0, 0),
-    'end': new Date(2015, 3, 12, 17, 30, 0, 0),
-    description: 'Most important meal of the day'
-  },
-  {
-    id: 9, 'title': 'Dinner',
-    'start':new Date(2015, 3, 12, 20, 0, 0, 0),
-    'end': new Date(2015, 3, 12, 21, 0, 0, 0),
-    'description': 'asdasdsasd'
-  },
-  {
-    id: 10, 'title': 'Birthday Party',
-    'start':new Date(2015, 3, 13, 7, 0, 0),
-    'end': new Date(2015, 3, 13, 10, 30, 0),
-    'description': 'asdasdsasd'
-  }
-];
+import {Vacation} from './../models/vacation';
+import Firebase from 'firebase';
 
 export class VacationRepository {
-  getVacationList () {
+  constructor () {
+     this.firebaseRef 
+      = new Firebase(this.url);
+  }
+
+  mapVactionWithCallback (mappedVacations, handler) {
+    mappedVacations.onValue = this.firebaseRef.on('child_changed', handler);
+    return mappedVacations;
+  }
+
+  handleVacation (snapshot, handler) {
+    let respose = snapshot.val();
+    let mappedVacations = respose
+      ? ( respose.length > 0 
+          ? respose.map ( o => new Vacation(o)) : [new Vacation(respose)])
+      : [{}];
+      mappedVacations = this
+        .mapVactionWithCallback (mappedVacations, handler);
+     return  mappedVacations;                
+  }
+
+  add (event) {
+    let self = this;
     return new Promise((resolve, reject) => {
-        resolve(ev);
+        let tmp = {};
+    tmp['tmp'] = event;
+          self.firebaseRef.push(new Vacation(tmp));
+          resolve('ok');
     });
   }
+
+  edit (event) {
+    let self = this;
+    return new Promise((resolve, reject) => {
+      let evtToupdateUrl = `${self.url}${event.key}`;
+      let ref = new Firebase(evtToupdateUrl);
+      ref.update(event, (error) => {
+        if (error) {
+          reject(error);
+        }
+        resolve('ok');
+      });
+    }); 
+  }
+  getVacationList (start,end, handler) {
+    let sts = start.toDate().getTime(), 
+    e =end.toDate().getTime();
+    let self = this;
+    return new Promise((resolve, reject) => {
+        this.firebaseRef
+                .orderByChild('start')
+                .startAt(sts)
+                .endAt(e)
+                .on('value', function(snapshot) {
+                  let mappedVacations = self.handleVacation (snapshot, handler);
+                  resolve (mappedVacations);
+            });
+    });
+  }
+  url = 'https://burning-torch-1729.firebaseio.com/items/';
 }
