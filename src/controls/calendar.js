@@ -4,6 +4,9 @@ import Firebase from 'firebase';
 import React, {PropTypes, ReactDOM} from 'react';
 import {FullCalendarModal} from './fullCalendarModal'
 import {VacationRepository} from './../repositories/vacationRepository';
+import uuid from './../middleware/uuid';
+import { dateToPrimitiveValue } from './../middleware/helper';
+
 export class Calendar extends React.Component {
 	constructor (props) {
 	   super(props);
@@ -19,10 +22,18 @@ export class Calendar extends React.Component {
         $(`${id}`).fullCalendar('unselect');
       }
 
+      _toFirebaseObject (event, isnew) {
+            event.id = isnew ? uuid() : event.id;
+            event.start = dateToPrimitiveValue(event.start);
+            event.end = dateToPrimitiveValue(event.end);
+            return event;
+      }
+
     _saveEvent (event) {
        let id = `#${this.props.id}`;
-       //todo genereate guid 
+       
        if (event.isEditing) {
+         event = this._toFirebaseObject(event, false);
          this.vacationRepository
             .edit (event)
             .then(response=> {
@@ -32,6 +43,7 @@ export class Calendar extends React.Component {
             .catch(error=> console.log(error));
          
        } else {
+            event = this._toFirebaseObject(event, true);
             this.vacationRepository
             .add (event)
             .then(response=> {
@@ -73,7 +85,7 @@ export class Calendar extends React.Component {
                     let eventData = {
                         title: '',
                         description: '',
-                         start: start,
+                        start: start,
                         end: end
                     };
                     this._openModal(eventData);
@@ -90,24 +102,7 @@ export class Calendar extends React.Component {
     componentWillReceiveProps () {
 	}
 	
-    componentWillMount () {//https://burning-torch-1729.firebaseio.com/items/-K6tOrmKoDLtvwAkL8KM.json?orderBy="start"&startAt=3/31/2015, 12:00:00 AM'&print=pretty
-       //    this.firebaseRef = new Firebase('https://burning-torch-1729.firebaseio.com/items/');
-       //  // let one = Date.parse('3/12/2015');
-       //  // let two = Date.parse('4/12/2015');
-       //  // this.firebaseRef
-       //  //     .orderByChild('start').startAt(one)
-       //  //     .endAt(two)
-       //  //     .on("value", function(snapshot) {
-       //  //         console.log(snapshot.val());
-       //  // });
-       //  // this.firebaseRef.on('value', this.logVisitorCount);
-       //  // this.firebaseRef.on('child_added', (dataSnapshot) => {
-       // // });
-       //  let me = ev.map(p => {return { title: p.title, description: p.description, start: p.start.getTime(), end: p.end.getTime() }});
-       // for (let o of me) {
-       //   this.firebaseRef.push(o);
-       // }
-      
+    componentWillMount () {
 	}
 	
     componentDidUpdate () {
@@ -143,6 +138,5 @@ export class Calendar extends React.Component {
         onChange: () => {},
         event: {}
     };
-   // items = [];
     modal;
 }

@@ -7,11 +7,27 @@ export class FullCalendarModal extends React.Component  {
 			event: {}
 		}
 	}
-
+  handleColorChange (prop) {
+    let event =  {
+          id: this.props.event.id,
+          title: this.props.event.title, 
+          key: this.props.event.key, 
+          description: this.props.event.description,
+          start: this.props.event.start,
+          end: this.props.event.end,
+          isEditing: this.props.isEditing
+        };
+        event.color = prop.target.value;
+      this.setState({
+        event: event
+      });
+  }
 	handleChange (name, prop) {
 		 let event =  {
-		 	id: this.props.event.id,
+		 	    id: this.props.event.id,
 	      	title: this.props.event.title, 
+          color: this.state.event.color ? this.state.event.color : this.props.event.color,
+          key: this.props.event.key, 
 	      	description: this.props.event.description,
 	      	start: this.props.event.start,
 	      	end: this.props.event.end,
@@ -35,7 +51,8 @@ export class FullCalendarModal extends React.Component  {
 		 let title = this.state.event.title ? this.state.event.title : this.props.event.title;
 		 let start = this.state.event.start ?  this.state.event.start.format('YYYY/MM/DD') : this.props.event.start.format('YYYY/MM/DD');
 		 let end = this.state.event.end  ?  this.state.event.end.format('YYYY/MM/DD') : this.props.event.start.format('YYYY/MM/DD');
-		 let description = this.state.event.description ? this.state.event.description : this.props.event.description
+		 let description = this.state.event.description ? this.state.event.description : this.props.event.description;
+     let color = this.state.event.color ? this.state.event.color : this.props.event.color;
 		 return (
               <div className="modal show">
                 <div className="modal-dialog">
@@ -82,6 +99,16 @@ export class FullCalendarModal extends React.Component  {
                       	disabled={disabledSave} 
                       	className="btn btn-primary">Save changes</button>
                     </div>
+                     <div className="form-group">
+                        <label className="col-sm-2 control-label" htmlFor="md-color">color</label>
+                        <input
+                          className="form-control" 
+                            htmlId="md-color" 
+                            type="text" 
+                            placeholder="color"  
+                          onChange={this.handleColorChange.bind(this)} 
+                          value={color} />
+                      </div>
                   </div>
                 </div>
               </div>

@@ -1,5 +1,6 @@
 import {Vacation} from './../models/vacation';
 import Firebase from 'firebase';
+import { dateToPrimitiveValue, getArrayFromKeyValue } from './../middleware/helper';
 
 export class VacationRepository {
   constructor () {
@@ -12,8 +13,12 @@ export class VacationRepository {
     return mappedVacations;
   }
 
+  _getArrayFromResponse (respose) {
+    return getArrayFromKeyValue(respose);
+  }
+
   handleVacation (snapshot, handler) {
-    let respose = snapshot.val();
+    let respose = this._getArrayFromResponse(snapshot.val());
     let mappedVacations = respose
       ? ( respose.length > 0 
           ? respose.map ( o => new Vacation(o)) : [new Vacation(respose)])
@@ -23,32 +28,48 @@ export class VacationRepository {
      return  mappedVacations;                
   }
 
+  _cleanModel (event) {
+     try {
+         delete event.isEditing;
+         delete event.key;
+      } catch (e) {
+
+      }
+      return event;
+  }
+
   add (event) {
     let self = this;
     return new Promise((resolve, reject) => {
+        event = this._cleanModel(event);
         let tmp = {};
-    tmp['tmp'] = event;
-          self.firebaseRef.push(new Vacation(tmp));
-          resolve('ok');
+        tmp[event.id] = event;
+        self.firebaseRef.child(event.id)
+        .set(event);
+        resolve('ok');
     });
   }
 
   edit (event) {
     let self = this;
     return new Promise((resolve, reject) => {
-      let evtToupdateUrl = `${self.url}${event.key}`;
+      let evtToupdateUrl = `${self.url}${event.id}`;
       let ref = new Firebase(evtToupdateUrl);
-      ref.update(event, (error) => {
-        if (error) {
-          reject(error);
-        }
-        resolve('ok');
-      });
+       event = this._cleanModel(event);
+        let tmp = {};
+        tmp[event.id] = event;
+        ref.update(event, (error, o) => {
+          console.log(error, o);
+          if (error) {
+            reject(error);
+          }
+          resolve('ok');
+        });
     }); 
   }
   getVacationList (start,end, handler) {
-    let sts = start.toDate().getTime(), 
-    e =end.toDate().getTime();
+    let sts = dateToPrimitiveValue(start), 
+    e = dateToPrimitiveValue(end);
     let self = this;
     return new Promise((resolve, reject) => {
         this.firebaseRef
