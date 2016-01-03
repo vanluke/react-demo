@@ -8,8 +8,15 @@ export class VacationRepository {
       = new Firebase(this.url);
   }
 
+  turnOff () {
+    if (this.firebaseRef) {
+       this.firebaseRef.off();
+     }
+  }
+
   mapVactionWithCallback (mappedVacations, handler) {
-    mappedVacations.onValue = this.firebaseRef.on('child_changed', handler);
+    mappedVacations.onValue 
+      = this.firebaseRef.on('child_changed', handler);
     return mappedVacations;
   }
 
@@ -38,6 +45,15 @@ export class VacationRepository {
       return event;
   }
 
+  getEvent (id) {
+    return new Promise ((resolve, reject) => {
+      (new Firebase(`${this.url}${id}`)).on('value', function (response) {
+        resolve(new Vacation (response.val()));
+      });
+    });
+    
+  }
+
   add (event) {
     let self = this;
     return new Promise((resolve, reject) => {
@@ -46,7 +62,10 @@ export class VacationRepository {
         tmp[event.id] = event;
         self.firebaseRef.child(event.id)
         .set(event);
-        resolve('ok');
+        this.getEvent (event.id)
+            .then (res => {
+              resolve(res);
+        }).catch(error => console.error(error));
     });
   }
 
@@ -63,8 +82,11 @@ export class VacationRepository {
           if (error) {
             reject(error);
           }
-          resolve('ok');
         });
+        this.getEvent (event.id)
+            .then (res => {
+              resolve(res);
+        }).catch(error => console.error(error));
     }); 
   }
   getVacationList (start,end, handler) {

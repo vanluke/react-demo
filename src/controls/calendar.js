@@ -1,11 +1,11 @@
 import $ from 'jquery';
-import 'fullcalendar';
 import Firebase from 'firebase';
 import React, {PropTypes, ReactDOM} from 'react';
 import {FullCalendarModal} from './fullCalendarModal'
 import {VacationRepository} from './../repositories/vacationRepository';
 import uuid from './../middleware/uuid';
-import { dateToPrimitiveValue } from './../middleware/helper';
+import {FullCalendar} from './../middleware/fullcalendar';
+import { dateToPrimitiveValue, toFirebaseObject } from './../middleware/helper';
 
 export class Calendar extends React.Component {
 	constructor (props) {
@@ -16,38 +16,34 @@ export class Calendar extends React.Component {
           items: []
         };
 	}
+
     _openModal(event, isEditing) {
-        let id = `#${this.props.id}`;
         this.setState({showModal: true, event: event, isEditing: isEditing});
-        $(`${id}`).fullCalendar('unselect');
+        this.fullCalendar.unselect();
       }
 
       _toFirebaseObject (event, isnew) {
-            event.id = isnew ? uuid() : event.id;
-            event.start = dateToPrimitiveValue(event.start);
-            event.end = dateToPrimitiveValue(event.end);
-            return event;
+            return toFirebaseObject(event, isnew);
       }
 
     _saveEvent (event) {
-       let id = `#${this.props.id}`;
-       
        if (event.isEditing) {
          event = this._toFirebaseObject(event, false);
          this.vacationRepository
             .edit (event)
             .then(response=> {
-                 $(`${id}`).fullCalendar('removeEvents', event.id);
-                 $(`${id}`).fullCalendar('renderEvent', event, true);
+               console.log(response);
+               this.fullCalendar.updateEvent(response);
             })
-            .catch(error=> console.log(error));
+            .catch(error=> console.error(error));
          
        } else {
             event = this._toFirebaseObject(event, true);
             this.vacationRepository
             .add (event)
             .then(response=> {
-                 $(`${id}`).fullCalendar('renderEvent', event, true);
+              console.log(response);
+                  this.fullCalendar.renderEvent(response);
             })
             .catch(error=> console.log(error));
        }
@@ -59,55 +55,20 @@ export class Calendar extends React.Component {
     }
 
     _refreshCalendar(snapshot) {
-         let id = `#${this.props.id}`;
          let event = snapshot.val();
-         console.log('nie');
          if (event.id) {
-            $(`${id}`).fullCalendar('removeEvents', event.id);
+            this.fullCalendar.removeEvent(event);
          }
-         $(`${id}`).fullCalendar('renderEvent', event, true);
+         this.fullCalendar.renderEvent(event);
     }
 	componentDidMount () {
-        let id = `#${this.props.id}`;
-        let self = this;
-        $(`#${this.props.id}`).fullCalendar({
-               events: (start, end, timezone, callback) => {
-                    self.props.events(start, end, this._refreshCalendar.bind(this))
-                        .then (evt => callback(evt))
-                        .catch(error => console.log(error));
-                },
-                selectable: true,
-                eventClick: (calEvent, jsEvent, view) => {
-                    this._openModal(calEvent, true);
-                },
-                editable: true,
-                select: (start, end) => {
-                    let eventData = {
-                        title: '',
-                        description: '',
-                        start: start,
-                        end: end
-                    };
-                    this._openModal(eventData);
-                },
-            });
+        this.fullCalendar = new FullCalendar (`#${this.props.id}`);
+        this.fullCalendar.create (this.fullcalendarSetup);
     }
     
     componentWillUnmount () {
-        $(`#${this.props.id}`)
-            .fullCalendar('destroy');
-         this.firebaseRef.off();
-    }
-	
-    componentWillReceiveProps () {
-	}
-	
-    componentWillMount () {
-	}
-	
-    componentDidUpdate () {
-		   $(`#${this.props.id}`)
-            .fullCalendar( 'rerenderEvents');
+         this.fullCalendar.destroy();
+         this.vacationRepository.turnOff();
     }
    
     render () {
@@ -124,6 +85,33 @@ export class Calendar extends React.Component {
                 event={event} />
           : undefined}
         </div>;
+    }
+
+    get fullcalendarSetup () {
+        let self = this;
+        return  {
+               events: (start, end, timezone, callback) => {
+
+                    self.props.events(start, end, 
+                        this._refreshCalendar.bind(this))
+                            .then (evt => callback(evt))
+                            .catch(error => console.log(error));
+                },
+                selectable: true,
+                eventClick: (calEvent, jsEvent, view) => {
+                    this._openModal(calEvent, true);
+                },
+                editable: true,
+                select: (start, end) => {
+                    let eventData = {
+                        title: '',
+                        description: '',
+                        start: start,
+                        end: end
+                    };
+                    this._openModal(eventData);
+                },
+            }
     }
 
     static propTypes = {
