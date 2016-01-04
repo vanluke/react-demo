@@ -28,16 +28,17 @@ export class EventForm extends React.Component  {
    }
 
    resolveStates () {
-   	let disabledSave = this.state.title ? false : true;
-   	let isEditing = this.props.isEditing;
-   	let id = this.props.id ?  this.props.id : undefined;
-	let title = this.state.title ? this.state.title : this.props.title;
-	let start = this.props.start.format('YYYY/MM/DD');
-	let end = this.props.end.format('YYYY/MM/DD');
-	let description = this.state.description ? this.state.description : this.props.description;
-    let color = this.state.color ? this.state.color : this.props.color;
-    return { id, disabledSave, title, start, end, description, color, isEditing };
-   }
+	   	let disabledSave = this.state.title ? false : true;
+	   	let isEditing = this.props.isEditing;
+	   	let id = this.props.id ?  this.props.id : undefined;
+		let title = this.state.title ? this.state.title : this.props.title;
+		let start = this.props.start.format('YYYY/MM/DD');
+		let end = this.props.end.format('YYYY/MM/DD');
+		let description = this.state.description ? this.state.description : this.props.description;
+	    let color = this.state.color ? this.state.color : this.props.color;
+	    return { id, disabledSave, title, start, end, description, color, isEditing };
+    }
+
     render() {
     	let {id: id, disabledSave: disabledSave, title: title, start: start, end: end, isEditing: isEditing, description: description, color: color} = this.resolveStates();
         console.log(disabledSave, title, start, end, description, color, isEditing);
@@ -51,23 +52,7 @@ export class EventForm extends React.Component  {
 				            placeholder='name'
 				            onChange={this.handleTitleChange.bind(this)}
 			            	value={title} />
-			        </div>
-	            <div>
-		            <label className='col-sm-2 control-label' htmlFor='md-start-date'>start date</label>
-		            <input className='form-control'
-			            htmlId='md-start-date'
-			            type='text'
-			            value={start}
-		            	disabled />
-	            </div>
-	            <div>
-		            <label className='col-sm-2 control-label' htmlFor='md-end-date'>end date</label> 
-		            <input className='form-control'
-			            htmlId='md-end-date'
-			            type='text'
-			            value={end}
-			            disabled />
-	            </div> 
+			    </div>
 	            <div>
 		            <label className='col-sm-2 control-label' htmlFor='md-description'>description</label>
 		            <textarea className='form-control'

@@ -118,5 +118,5 @@ export class VacationRepository {
             });
     });
   }
-  url = '';
+  url = 'https://burning-torch-1729.firebaseio.com/items/';
 }
