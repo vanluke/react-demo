@@ -58,8 +58,7 @@ export class NewsWidget extends React.Component {
   }
 
   render() {
-    
-      var nodes = this.state.news.map((article, i) => {
+      let nodes = this.state.news.map((article, i) => {
         return (<Article data={article} key={i}>
         </Article>)
       });

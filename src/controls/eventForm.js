@@ -1,15 +1,19 @@
 import $ from 'jquery';
 import React, { PropTypes } from 'react';
+import {ColorRepository} from './../repositories/colorRepository';
+import {Dropdown} from './dropdown';
 
 export class EventForm extends React.Component  {
 	constructor (props) {
 		super(props);
+		this.colorRepository = new ColorRepository();
 		this.state = {
 			title: '',
 			start: '',
 			end: '',
 			description: '',
-			color: ''
+			color: '',
+			colors: []
 		}
 	}
    
@@ -27,6 +31,17 @@ export class EventForm extends React.Component  {
       });
    }
 
+   componentWillMount() {
+   		this.colorRepository
+   		.getAll()
+   		.then(colors => {
+   			console.log(colors);
+   			this.setState({
+   				colors: colors.map(c => {return { label: c.name, value: c.hex } })
+   			});
+   		}).catch(error => console.error(error));
+   }
+
    resolveStates () {
 	   	let disabledSave = this.state.title ? false : true;
 	   	let isEditing = this.props.isEditing;
@@ -39,9 +54,13 @@ export class EventForm extends React.Component  {
 	    return { id, disabledSave, title, start, end, description, color, isEditing };
     }
 
+    dropDownOnChange (elemt) {
+    	  this.setState({color: elemt.newValue});
+    }
+
     render() {
     	let {id: id, disabledSave: disabledSave, title: title, start: start, end: end, isEditing: isEditing, description: description, color: color} = this.resolveStates();
-        console.log(disabledSave, title, start, end, description, color, isEditing);
+        
         return (
         	<div>
 	        	<div className = 'form-group'>
@@ -63,13 +82,15 @@ export class EventForm extends React.Component  {
 			    </div>
 	            <div className='form-group'>
 	                <label className='col-sm-2 control-label' htmlFor='md-color'>color</label>
-	            	    <input
-	                      className='form-control' 
-	                      htmlId='md-color' 
-	                      type='text' 
-	                      placeholder='color'  
-	                      onChange={this.handleColorChange.bind(this)} 
-	                      value={color} />
+	            	   <Dropdown
+	            	   		key='dropdown-color'
+	            	   		id='myDropdown' 
+		                  	options={this.state.colors} 
+		                  	value={color}
+		                  	selected={color}
+		                  	labelField='description'
+		                  	valueField='code'
+		                  	onChange={this.dropDownOnChange.bind(this)}/>
 	             </div>
 	             <div>
 	             	 <button type="button" onClick={this.props.onClose.bind(this)} 
