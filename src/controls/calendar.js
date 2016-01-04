@@ -87,19 +87,33 @@ export class Calendar extends React.Component {
         </div>;
     }
 
+    _handleRemoveClick (target, event) {
+      if (target && target.id 
+          && target.id === 'delete') {
+          this.fullCalendar.removeEvent(event);
+          this.vacationRepository.remove(event);
+        return true;
+      }
+      return false;
+    }
+
     get fullcalendarSetup () {
         let self = this;
         return  {
                events: (start, end, timezone, callback) => {
-
                     self.props.events(start, end, 
                         this._refreshCalendar.bind(this))
                             .then (evt => callback(evt))
                             .catch(error => console.log(error));
                 },
+                eventRender: function(event, element) {
+                   element.html(event.title 
+                    + '<span title=\'Remove event\' class=\'removeEvent glyphicon glyphicon-trash pull-right delete shake animated animated-hover\' id=\'delete\'></span>');
+                },
                 selectable: true,
                 eventClick: (calEvent, jsEvent, view) => {
-                    this._openModal(calEvent, true);
+                    let isRemoved = this._handleRemoveClick (jsEvent.target, calEvent);
+                    isRemoved ? undefined : this._openModal(calEvent, true);
                 },
                 editable: true,
                 select: (start, end) => {

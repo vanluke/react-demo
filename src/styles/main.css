@@ -51,3 +51,127 @@ section {
       height: 400px;
       display: block;
     }
+
+    .delete {
+      cursor:pointer;
+    }
+
+    .delete:hover {
+       color: #ffffff;
+    }
+
+@-moz-keyframes wrench {
+  0%{-moz-transform:rotate(-12deg)}
+  8%{-moz-transform:rotate(12deg)}
+  10%{-moz-transform:rotate(24deg)}
+  18%{-moz-transform:rotate(-24deg)}
+  20%{-moz-transform:rotate(-24deg)}
+  28%{-moz-transform:rotate(24deg)}
+  30%{-moz-transform:rotate(24deg)}
+  38%{-moz-transform:rotate(-24deg)}
+  40%{-moz-transform:rotate(-24deg)}
+  48%{-moz-transform:rotate(24deg)}
+  50%{-moz-transform:rotate(24deg)}
+  58%{-moz-transform:rotate(-24deg)}
+  60%{-moz-transform:rotate(-24deg)}
+  68%{-moz-transform:rotate(24deg)}
+  75%{-moz-transform:rotate(0deg)}
+}
+@-webkit-keyframes wrench {
+  0%{-webkit-transform:rotate(-12deg)}
+  8%{-webkit-transform:rotate(12deg)}
+  10%{-webkit-transform:rotate(24deg)}
+  18%{-webkit-transform:rotate(-24deg)}
+  20%{-webkit-transform:rotate(-24deg)}
+  28%{-webkit-transform:rotate(24deg)}
+  30%{-webkit-transform:rotate(24deg)}
+  38%{-webkit-transform:rotate(-24deg)}
+  40%{-webkit-transform:rotate(-24deg)}
+  48%{-webkit-transform:rotate(24deg)}
+  50%{-webkit-transform:rotate(24deg)}
+  58%{-webkit-transform:rotate(-24deg)}
+  60%{-webkit-transform:rotate(-24deg)}
+  68%{-webkit-transform:rotate(24deg)}
+  75%{-webkit-transform:rotate(0deg)}
+}
+@-o-keyframes wrench {
+  0%{-o-transform:rotate(-12deg)}
+  8%{-o-transform:rotate(12deg)}
+  10%{-o-transform:rotate(24deg)}
+  18%{-o-transform:rotate(-24deg)}
+  20%{-o-transform:rotate(-24deg)}
+  28%{-o-transform:rotate(24deg)}
+  30%{-o-transform:rotate(24deg)}
+  38%{-o-transform:rotate(-24deg)}
+  40%{-o-transform:rotate(-24deg)}
+  48%{-o-transform:rotate(24deg)}
+  50%{-o-transform:rotate(24deg)}
+  58%{-o-transform:rotate(-24deg)}
+  60%{-o-transform:rotate(-24deg)}
+  68%{-o-transform:rotate(24deg)}
+  75%{-o-transform:rotate(0deg)}
+}
+@-ms-keyframes wrench {
+  0%{-ms-transform:rotate(-12deg)}
+  8%{-ms-transform:rotate(12deg)}
+  10%{-ms-transform:rotate(24deg)}
+  18%{-ms-transform:rotate(-24deg)}
+  20%{-ms-transform:rotate(-24deg)}
+  28%{-ms-transform:rotate(24deg)}
+  30%{-ms-transform:rotate(24deg)}
+  38%{-ms-transform:rotate(-24deg)}
+  40%{-ms-transform:rotate(-24deg)}
+  48%{-ms-transform:rotate(24deg)}
+  50%{-ms-transform:rotate(24deg)}
+  58%{-ms-transform:rotate(-24deg)}
+  60%{-ms-transform:rotate(-24deg)}
+  68%{-ms-transform:rotate(24deg)}
+  75%{-ms-transform:rotate(0deg)}
+}
+@keyframes wrench {
+  0%{transform:rotate(-12deg)}
+  8%{transform:rotate(12deg)}
+  10%{transform:rotate(24deg)}
+  18%{transform:rotate(-24deg)}
+  20%{transform:rotate(-24deg)}
+  28%{transform:rotate(24deg)}
+  30%{transform:rotate(24deg)}
+  38%{transform:rotate(-24deg)}
+  40%{transform:rotate(-24deg)}
+  48%{transform:rotate(24deg)}
+  50%{transform:rotate(24deg)}
+  58%{transform:rotate(-24deg)}
+  60%{transform:rotate(-24deg)}
+  68%{transform:rotate(24deg)}
+  75%{transform:rotate(0deg)}
+}
+.wrench.animated, .wrench.animated-hover:hover {
+  -moz-animation: wrench 2.5s ease infinite;
+  -moz-transform-origin-x: 90%;
+  -moz-transform-origin-y: 35%;
+  -moz-transform-origin-z: initial;
+
+  -webkit-animation: wrench 2.5s ease infinite;
+  -webkit-transform-origin-x: 90%;
+  -webkit-transform-origin-y: 35%;
+  -webkit-transform-origin-z: initial;
+
+  -ms-animation: wrench 2.5s ease infinite;
+  -ms-transform-origin-x: 90%;
+  -ms-transform-origin-y: 35%;
+  -ms-transform-origin-z: initial;
+
+  animation: wrench 2.5s ease infinite;
+  transform-origin-x: 90%;
+  transform-origin-y: 35%;
+  transform-origin-z: initial;
+}
+
+.shake.animated {
+  -webkit-animation: wrench 2.5s ease infinite;
+}
+
+.shake.animated-hover:hover {
+     font-size: 15px;
+     animation-play-state: paused;
+}

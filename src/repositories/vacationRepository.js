@@ -89,6 +89,20 @@ export class VacationRepository {
         }).catch(error => console.error(error));
     }); 
   }
+
+  remove (event) {
+    return new Promise((resolve, reject) => {
+        let evtToupdateRemoveUrl = `${this.url}${event.id}`;
+        let ref = new Firebase(evtToupdateRemoveUrl);
+          ref.remove((error) => {
+            if (error) {
+              reject(error);
+            }
+            resolve(true);
+          });
+      });
+  }
+
   getVacationList (start,end, handler) {
     let sts = dateToPrimitiveValue(start), 
     e = dateToPrimitiveValue(end);
@@ -104,5 +118,5 @@ export class VacationRepository {
             });
     });
   }
-  url = 'https://burning-torch-1729.firebaseio.com/items/';
+  url = '';
 }
