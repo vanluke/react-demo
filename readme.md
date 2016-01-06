@@ -1,4 +1,4 @@
-## ReactJS demo with fulx
+## ReactJS demo
 
 # Proof of Concept
 
