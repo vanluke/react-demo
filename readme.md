@@ -2,11 +2,8 @@
 
 # Proof of Concept
 
-## under development!
-
 #dependencies
-	
+
 	-fullcalendar
 	-bootstrap
 	-react-router
-

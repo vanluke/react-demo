@@ -14,7 +14,7 @@ export class Dropdown extends React.Component {
     }
 
      componentWillReceiveProps (nextProps) {
-        let selected 
+        let selected
             = this.getSelectedFromProps(nextProps);
         this.setState({
            selected: selected
@@ -51,11 +51,12 @@ export class Dropdown extends React.Component {
                 </option>
             )
         });
+        options.push(<option key='empty' value='undefined'>select value</option>)
         return (
-            <select id={this.props.id} 
+            <select id={this.props.id}
                     key={this.props.id}
-                    className='form-control' 
-                    value={this.state.selected} 
+                    className='form-control'
+                    value={this.state.selected}
                     onChange={this.handleChange.bind(this)}>
                 {options}
             </select>

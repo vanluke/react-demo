@@ -4,9 +4,7 @@ import { toReadableDate } from './../middleware/helper';
 
 export class FullCalendar {
 	constructor (fullcalendarRef) {
-		console.log(fullcalendarRef);
 		this.calendar = $(fullcalendarRef);
-		console.log(this.calendar);
 	}
 
 	updateEvent (event) {
@@ -20,7 +18,7 @@ export class FullCalendar {
 		if (!this.calendar) {
 			throw 'calendar is not defined.';
 		}
-		
+
 		return this.calendar.fullCalendar(options);
 	}
 
@@ -52,5 +50,3 @@ export class FullCalendar {
 		return event;
 	}
 }
-
-
