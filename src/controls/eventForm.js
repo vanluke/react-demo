@@ -35,7 +35,6 @@ export class EventForm extends React.Component  {
 		this.colorRepository
 		.getAll()
 		.then(colors => {
-			console.log(colors);
 			this.setState({
 				colors: colors.map(c => {return { label: c.name, value: c.hex } })
 			});

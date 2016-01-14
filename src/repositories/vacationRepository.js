@@ -7,6 +7,7 @@ export class VacationRepository {
   constructor () {
     this.firebaseRef
     = new Firebase(config.firebaseUrl);
+    this.url = config.firebaseUrl;
   }
 
   turnOff () {
