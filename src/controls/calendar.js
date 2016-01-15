@@ -41,7 +41,6 @@ export class Calendar extends React.Component {
 			this.vacationRepository
 			.add (event)
 			.then(response=> {
-				this.fullCalendar.renderEvent(response);
 			})
 			.catch(error=> console.log(error));
 		}

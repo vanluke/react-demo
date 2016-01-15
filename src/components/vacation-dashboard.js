@@ -1,5 +1,4 @@
 import {Calendar} from './../controls/calendar';
-// import BigCalendar from 'react-big-calendar/lib/css/react-big-calendar.css';
 import React, { PropTypes } from 'react';
 import {VacationRepository} from './../repositories/vacationRepository';
 

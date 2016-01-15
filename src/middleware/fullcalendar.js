@@ -10,7 +10,7 @@ export class FullCalendar {
 	updateEvent (event) {
 		if (event && event.id) {
 		 	this.removeEvent(event);
-            this.renderEvent(event);
+      this.renderEvent(event);
 		}
 	}
 
